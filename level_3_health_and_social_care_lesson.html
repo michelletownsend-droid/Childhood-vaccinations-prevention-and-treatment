@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L3 Health & Social Care: Child Health, Vaccination & Oral Care</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        nhs: {
+                            blue: '#005EB8',
+                            darkblue: '#003087',
+                            brightblue: '#0072CE',
+                            lightbg: '#F0F4F8',
+                            danger: '#D81B60',
+                            warning: '#E65100',
+                            success: '#007A3D',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for better visual appeal */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        .pulse-red {
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(216, 27, 96, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(216, 27, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(216, 27, 96, 0); }
+        }
+        
+        .grid-sim {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 6px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- Navigation Header -->
+    <header class="bg-nhs-blue text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-white text-nhs-blue font-black tracking-tighter px-2.5 py-1 rounded text-xl shadow-sm">
+                    NHS
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold leading-tight">Level 3 AAQ Health & Social Care</h1>
+                    <p class="text-xs text-blue-100">Unit C1.1 Prevalent Conditions | Unit C2 Promotion & Prevention</p>
+                </div>
+            </div>
+            
+            <!-- Progress Tracker -->
+            <div class="w-full md:w-72 bg-nhs-darkblue/40 p-2.5 rounded-lg border border-blue-400/30">
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                    <span class="text-blue-100">Overall Progress</span>
+                    <span id="progress-text" class="text-white">0%</span>
+                </div>
+                <div class="w-full bg-nhs-darkblue rounded-full h-2.5 overflow-hidden">
+                    <div id="progress-bar" class="bg-emerald-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-[61px] z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto">
+            <div class="flex space-x-1 sm:space-x-4 min-w-max py-2">
+                <button onclick="switchTab('tab-overview')" id="btn-tab-overview" class="tab-btn active px-4 py-2 text-sm font-semibold rounded-md transition-colors text-nhs-blue bg-blue-50 border-b-2 border-nhs-blue">
+                    <i class="fa-solid fa-book-open mr-2"></i>Overview
+                </button>
+                <button onclick="switchTab('tab-conditions')" id="btn-tab-conditions" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-stethosocpe mr-2"></i>C1.1 Prevalent Conditions
+                </button>
+                <button onclick="switchTab('tab-vaccines')" id="btn-tab-vaccines" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-syringe mr-2"></i>C2.1 Vaccines & Herd Immunity
+                </button>
+                <button onclick="switchTab('tab-dental')" id="btn-tab-dental" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-tooth mr-2"></i>C2.4 Dental & Oral Care
+                </button>
+                <button onclick="switchTab('tab-cases')" id="btn-tab-cases" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-user-doctor mr-2"></i>Case Studies
+                </button>
+                <button onclick="switchTab('tab-quiz')" id="btn-tab-quiz" class="tab-btn px-4 py-2 text-sm font-semibold rounded-md transition-colors text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-graduation-cap mr-2"></i>Exam Practice
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 0: OVERVIEW -->
+        <section id="tab-overview" class="tab-content block space-y-6">
+            <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+                <div class="flex flex-col lg:flex-row gap-6 justify-between items-start">
+                    <div class="space-y-4 max-w-3xl">
+                        <span class="inline-block px-3 py-1 bg-blue-100 text-nhs-blue text-xs font-bold rounded-full uppercase tracking-wider">Level 3 Vocational Specification</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Childhood Health, Prevention & Health Promotion</h2>
+                        <p class="text-slate-600 leading-relaxed">
+                            Welcome to this interactive learning module tailored for Level 3 Health and Social Care students. As a practitioner, you must develop sound clinical understanding to recognize early symptoms of childhood illnesses, respond to life-threatening red flags, and advocate for health promotion strategies like immunizations and oral hygiene.
+                        </p>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 p-5 rounded-lg w-full lg:w-80 shrink-0">
+                        <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center"><i class="fa-solid fa-list-check text-nhs-blue mr-2"></i> Learning Objectives</h3>
+                        <ul class="text-xs space-y-2 text-slate-600">
+                            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-600 mr-2 mt-0.5"></i> Identify 7 prevalent childhood health & developmental conditions (C1.1).</li>
+                            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-600 mr-2 mt-0.5"></i> Understand vaccination mechanisms & model herd immunity dynamics (C2.1).</li>
+                            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-600 mr-2 mt-0.5"></i> Detail stages of dental caries and key preventive dental checks (C2.4).</li>
+                            <li class="flex items-start"><i class="fa-solid fa-check text-emerald-600 mr-2 mt-0.5"></i> Apply practitioner actions to scenario-based exam questions.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <hr class="my-6 border-slate-200">
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div onclick="switchTab('tab-conditions')" class="cursor-pointer group bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-5 hover:shadow-md transition-all">
+                        <div class="w-12 h-12 bg-nhs-blue text-white rounded-lg flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-notes-medical"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 group-hover:text-nhs-blue transition-colors">Unit C1.1 Prevalent Conditions</h3>
+                        <p class="text-xs text-slate-600 mt-2">Explore flu, chicken pox, ear infections, meningitis, conjunctivitis, speech delays, and dental caries.</p>
+                        <span class="inline-flex items-center text-xs font-bold text-nhs-blue mt-4">Start Module <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+
+                    <div onclick="switchTab('tab-vaccines')" class="cursor-pointer group bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-5 hover:shadow-md transition-all">
+                        <div class="w-12 h-12 bg-emerald-600 text-white rounded-lg flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">Unit C2.1 Vaccinations</h3>
+                        <p class="text-xs text-slate-600 mt-2">Interactive herd immunity simulator. Learn how vaccines work and why coverage thresholds matter.</p>
+                        <span class="inline-flex items-center text-xs font-bold text-emerald-700 mt-4">Start Simulator <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+
+                    <div onclick="switchTab('tab-dental')" class="cursor-pointer group bg-gradient-to-br from-purple-50 to-fuchsia-50 border border-purple-200 rounded-xl p-5 hover:shadow-md transition-all">
+                        <div class="w-12 h-12 bg-purple-600 text-white rounded-lg flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-tooth"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 group-hover:text-purple-700 transition-colors">Unit C2.4 Dental Care</h3>
+                        <p class="text-xs text-slate-600 mt-2">Examine dental decay stages, routine dental checks, fluoride varnish, and dietary prevention strategies.</p>
+                        <span class="inline-flex items-center text-xs font-bold text-purple-700 mt-4">Explore Dental Health <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 1: PREVALENT CONDITIONS (C1.1) -->
+        <section id="tab-conditions" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <span class="text-xs font-bold text-nhs-blue bg-blue-50 px-2.5 py-1 rounded-full uppercase">Unit C1.1 Knowledge Base</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Prevalent Health & Developmental Conditions</h2>
+                        <p class="text-sm text-slate-600">Select a condition below to inspect etiology, clinical symptoms, and Level 3 practitioner duty of care.</p>
+                    </div>
+                </div>
+
+                <!-- Conditions Grid Selector -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 mb-6">
+                    <button onclick="showCondition('flu')" id="cond-btn-flu" class="cond-selector-btn px-3 py-2.5 rounded-lg border text-xs font-bold text-center transition-all bg-nhs-blue text-white border-nhs-blue shadow-sm">
+                        <i class="fa-solid fa-virus block text-base mb-1"></i> Influenza (Flu)
+                    </button>
+                    <button onclick="showCondition('chickenpox')" id="cond-btn-chickenpox" class="cond-selector-btn px-3 py-2.5 rounded-lg border text-xs font-bold text-center transition-all bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+                        <i class="fa-solid fa-dots-throat block text-base mb-1"></i> Chicken Pox
+                    </button>
+                    <button onclick="showCondition('earinfection')" id="cond-btn-earinfection" class="cond-selector-btn px-3 py-2.5 rounded-lg border text-xs font-bold text-center transition-all bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+                        <i class="fa-solid fa-ear-deaf block text-base mb-1"></i> Ear Infection
+                    </button>
+                    <button onclick="showCondition('meningitis')" id="cond-btn-meningitis" class="cond-selector-btn px-3 py-2.5 rounded-lg border text-xs font-bold text-center transition-all bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+                        <i class="fa-solid fa-triangle-exclamation block text-base mb-1 text-red-500"></i> Meningitis
+                    </button>
+                    <button onclick="showCondition('conjunctivitis')" id="cond-btn-conjunctivitis" class="cond-selector-btn px-3 py-2.5 rounded-lg border text-xs font-bold text-center transition-all bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+                        <i class="fa-solid fa-eye block text-base mb-1"></i> Conjunctivitis
+                    </button>
+                    <button onclick="showCondition('speech')" id="cond-btn-speech" class="cond-selector-btn px-3 py-2.5 rounded-lg border text-xs font-bold text-center transition-all bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+                        <i class="fa-solid fa-comments block text-base mb-1"></i> Speech Delay
+                    </button>
+                    <button onclick="showCondition('dentalcaries')" id="cond-btn-dentalcaries" class="cond-selector-btn px-3 py-2.5 rounded-lg border text-xs font-bold text-center transition-all bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+                        <i class="fa-solid fa-tooth block text-base mb-1"></i> Dental Caries
+                    </button>
+                </div>
+
+                <!-- Condition Detail Display Card -->
+                <div id="condition-card-display" class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                    <!-- Populated dynamically via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Interactive Scenario Matcher / Clinical Reasoning Exercise -->
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                <div class="border-b border-slate-200 pb-4 mb-4">
+                    <span class="px-2.5 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full uppercase">Interactive Exercise</span>
+                    <h3 class="text-xl font-bold text-slate-900 mt-2">Clinical Scenario Assessment</h3>
+                    <p class="text-sm text-slate-600">Read the practitioner observation notes below. Select the correct condition and appropriate L3 response.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Scenario Display -->
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span id="scenario-number-badge" class="text-xs font-bold text-white bg-nhs-blue px-2.5 py-1 rounded-full">Scenario 1 of 3</span>
+                            <span class="text-xs text-slate-500 font-semibold">Observation Record</span>
+                        </div>
+                        <div id="scenario-box" class="bg-white p-4 rounded-md border border-slate-200 font-serif text-sm text-slate-700 italic leading-relaxed">
+                            <!-- Scenario text rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Options & Feedback -->
+                    <div class="space-y-4">
+                        <label class="block text-xs font-bold uppercase text-slate-600">Identify Suspected Condition:</label>
+                        <select id="scenario-select" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-nhs-blue focus:outline-none">
+                            <option value="">-- Choose Condition --</option>
+                            <option value="flu">Influenza (Flu)</option>
+                            <option value="chickenpox">Chicken Pox</option>
+                            <option value="earinfection">Ear Infection (Otitis Media)</option>
+                            <option value="meningitis">Meningitis (Bacterial/Viral)</option>
+                            <option value="conjunctivitis">Conjunctivitis</option>
+                            <option value="speech">Speech & Language Delay</option>
+                            <option value="dentalcaries">Dental Caries (Tooth Decay)</option>
+                        </select>
+
+                        <button onclick="verifyScenario()" class="w-full py-2.5 bg-nhs-blue hover:bg-nhs-darkblue text-white font-bold rounded-lg transition-colors text-sm shadow-sm">
+                            Submit Assessment
+                        </button>
+
+                        <div id="scenario-feedback" class="hidden p-4 rounded-lg text-sm font-medium"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: VACCINATIONS & HERD IMMUNITY (C2.1) -->
+        <section id="tab-vaccines" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                <div class="flex flex-col lg:flex-row justify-between items-start gap-6">
+                    <div class="max-w-3xl space-y-3">
+                        <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full uppercase">Unit C2.1 Vaccine Science</span>
+                        <h2 class="text-2xl font-bold text-slate-900">Vaccinations & Herd Immunity Simulator</h2>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Vaccines introduce harmless antigens or genetic instructions to train the immune system (lymphocytes) to produce specific antibodies without causing actual illness. This creates <strong>immunological memory</strong>.
+                        </p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            <strong>Herd Immunity</strong> occurs when a high proportion of a population is immune (typically <strong>90–95%</strong> for highly contagious diseases like measles), preventing the pathogen from finding susceptible hosts. This protects vulnerable individuals who cannot be vaccinated (e.g., newborn infants, immunocompromised children).
+                        </p>
+                    </div>
+
+                    <!-- Info Box -->
+                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl w-full lg:w-72 shrink-0">
+                        <h4 class="font-bold text-emerald-900 text-xs uppercase tracking-wide mb-2"><i class="fa-solid fa-shield-virus mr-1"></i> Key Takeaway</h4>
+                        <p class="text-xs text-emerald-800 leading-relaxed">
+                            If vaccination rates drop below threshold limits (e.g. 95%), herd immunity breaks down, allowing localized outbreaks to rapidly spread to vulnerable group members.
+                        </p>
+                    </div>
+                </div>
+
+                <hr class="my-6 border-slate-200">
+
+                <!-- Herd Immunity Interactive Simulator Grid -->
+                <div class="bg-slate-900 text-white rounded-xl p-6 border border-slate-800 shadow-inner">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 border-b border-slate-800 pb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
+                                <i class="fa-solid fa-users-viewfinder"></i> Herd Immunity Outbreak Simulator
+                            </h3>
+                            <p class="text-xs text-slate-400">100 Individuals in a Nursery / Community Cohort</p>
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="flex flex-wrap items-center gap-4 w-full md:w-auto">
+                            <div class="flex-1 md:w-64">
+                                <div class="flex justify-between text-xs font-semibold mb-1">
+                                    <span class="text-slate-300">Vaccination Rate:</span>
+                                    <span id="sim-rate-val" class="text-emerald-400 font-bold text-sm">85%</span>
+                                </div>
+                                <input id="sim-slider" type="range" min="0" max="100" value="85" step="5" oninput="updateSimRate(this.value)" class="w-full accent-emerald-500 cursor-pointer">
+                            </div>
+
+                            <button onclick="runOutbreakSim()" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold rounded-lg transition-all text-xs uppercase tracking-wider shadow-lg flex items-center gap-2">
+                                <i class="fa-solid fa-play"></i> Trigger Outbreak
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="flex flex-wrap items-center gap-4 text-xs mb-6 bg-slate-800/80 p-3 rounded-lg border border-slate-700">
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> Vaccinated (Protected)</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-slate-400 inline-block"></span> Unvaccinated (Healthy)</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-purple-500 inline-block"></span> Vulnerable / Unable to Vaccinate</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-red-500 animate-pulse inline-block"></span> Infected Patient</span>
+                    </div>
+
+                    <!-- Simulator Canvas Grid -->
+                    <div id="sim-grid" class="grid-sim max-w-lg mx-auto bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- Sim Stats Summary -->
+                    <div id="sim-summary" class="mt-6 p-4 bg-slate-800/60 rounded-lg text-center text-xs text-slate-300">
+                        Adjust slider coverage and click <strong>Trigger Outbreak</strong> to test herd immunity protection against pathogen spread.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: DENTAL CHECKS & ORAL HEALTH (C2.4) -->
+        <section id="tab-dental" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                <div class="border-b border-slate-200 pb-4 mb-6">
+                    <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full uppercase">Unit C2.4 Oral Care Promotion</span>
+                    <h2 class="text-2xl font-bold text-slate-900 mt-1">Dental Checks & Dental Caries Progression</h2>
+                    <p class="text-sm text-slate-600">Tooth decay (dental caries) is the leading cause of hospital admissions for young children in the UK, yet it is almost entirely preventable.</p>
+                </div>
+
+                <!-- Tooth Decay Progression Interactive Visualizer -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-8">
+                    <!-- Stage 1 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-purple-300 transition-all">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-purple-800 bg-purple-100 px-2 py-0.5 rounded">Stage 1</span>
+                            <i class="fa-solid fa-tooth text-slate-300 text-xl"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm mb-1">Enamel Demineralization</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Plaque bacteria consume refined dietary sugars, producing acid that attacks tooth enamel, creating subtle white spots. Reversible with fluoride.
+                        </p>
+                    </div>
+
+                    <!-- Stage 2 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-purple-300 transition-all">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">Stage 2</span>
+                            <i class="fa-solid fa-tooth text-amber-500 text-xl"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm mb-1">Enamel Decay & Cavity</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Enamel breaks down permanently. A visible cavity forms in the hard outer enamel. Requires filling intervention by a dental professional.
+                        </p>
+                    </div>
+
+                    <!-- Stage 3 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-purple-300 transition-all">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-orange-800 bg-orange-100 px-2 py-0.5 rounded">Stage 3</span>
+                            <i class="fa-solid fa-tooth text-orange-600 text-xl"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm mb-1">Dentin Decay</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Decay reaches the softer dentin layer beneath enamel. Child experiences pain, sensitivity to sweet, cold, or hot foods and beverages.
+                        </p>
+                    </div>
+
+                    <!-- Stage 4 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-purple-300 transition-all">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-red-800 bg-red-100 px-2 py-0.5 rounded">Stage 4</span>
+                            <i class="fa-solid fa-tooth text-red-600 text-xl"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm mb-1">Pulp Infection & Abscess</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Bacterial infection invades the living pulp nerve center. Causes severe continuous throbbing pain, facial swelling, fever, and risk of tooth extraction.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Preventive Checklist & Role of Dental Checks -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-purple-50/50 border border-purple-200 rounded-xl p-5">
+                        <h3 class="font-bold text-purple-900 text-sm mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-notes-medical text-purple-700"></i> Role of Routine Childhood Dental Checks
+                        </h3>
+                        <ul class="space-y-2.5 text-xs text-slate-700">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-purple-600 mt-0.5"></i>
+                                <span><strong>Early Milestone Checks:</strong> First check-up recommended by age 1 or when first tooth erupts to assess alignment and decay risk.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-purple-600 mt-0.5"></i>
+                                <span><strong>Fluoride Varnish Application:</strong> Professional application of high-fluoride varnish every 6 months to strengthen enamel.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-purple-600 mt-0.5"></i>
+                                <span><strong>Parental Advice:</strong> Guidance on bottle weaning (transitioning to open cups by age 1), limiting free sugars, and twice-daily supervised brushing with fluoride toothpaste.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Interactive Dental Checklist Builder -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5">
+                        <h3 class="font-bold text-slate-900 text-sm mb-3">Early Years Setting Oral Care Action Plan</h3>
+                        <p class="text-xs text-slate-600 mb-3">Select appropriate strategies for a nursery settings oral health policy:</p>
+
+                        <div class="space-y-2 text-xs">
+                            <label class="flex items-center p-2 rounded bg-white border border-slate-200 cursor-pointer hover:bg-slate-100">
+                                <input type="checkbox" class="dental-check rounded text-purple-600 focus:ring-purple-500 mr-2.5" onchange="checkDentalPlan()">
+                                Encourage water or plain milk only between scheduled meals
+                            </label>
+                            <label class="flex items-center p-2 rounded bg-white border border-slate-200 cursor-pointer hover:bg-slate-100">
+                                <input type="checkbox" class="dental-check rounded text-purple-600 focus:ring-purple-500 mr-2.5" onchange="checkDentalPlan()">
+                                Implement supervised toothbrushing scheme using age-appropriate fluoride toothpaste
+                            </label>
+                            <label class="flex items-center p-2 rounded bg-white border border-slate-200 cursor-pointer hover:bg-slate-100">
+                                <input type="checkbox" class="dental-check rounded text-purple-600 focus:ring-purple-500 mr-2.5" onchange="checkDentalPlan()">
+                                Signpost parents to free NHS dental services available under age 18
+                            </label>
+                            <label class="flex items-center p-2 rounded bg-white border border-slate-200 cursor-pointer hover:bg-slate-100">
+                                <input type="checkbox" class="dental-check rounded text-purple-600 focus:ring-purple-500 mr-2.5" onchange="checkDentalPlan()">
+                                Restrict fruit juices and dried fruits to meal times only
+                            </label>
+                        </div>
+
+                        <div id="dental-plan-feedback" class="mt-4 text-xs font-bold text-purple-800 hidden">
+                            <i class="fa-solid fa-star text-amber-500 mr-1"></i> Comprehensive Early Years Oral Health Policy complete!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: CASE STUDIES -->
+        <section id="tab-cases" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                <div class="border-b border-slate-200 pb-4 mb-6">
+                    <span class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full uppercase">Vocational Practice Scenarios</span>
+                    <h2 class="text-2xl font-bold text-slate-900 mt-1">Professional Case Studies</h2>
+                    <p class="text-sm text-slate-600">Apply your L3 theoretical knowledge to real-world health and social care scenarios.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Case Study 1 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-900 text-base">Case 1: Red Flag Assessment in an Early Years Setting</h3>
+                            <span class="bg-red-100 text-red-800 text-xs font-bold px-2.5 py-1 rounded-full">Emergency Duty of Care</span>
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed">
+                            You are a senior key worker at a nursery caring for 14-month-old Leo. During outdoor play, Leo becomes unusually lethargic, refuses his snack, and feels hot to touch (temperature 38.9°C). An hour later, he displays light sensitivity (photophobia) and cries when his neck is gently moved during a nappy change. You notice tiny purple pinprick spots on his abdomen that do not fade under pressure from a clear glass tumbler.
+                        </p>
+                        
+                        <div class="bg-white p-4 rounded-lg border border-slate-200 space-y-3">
+                            <h4 class="text-xs font-bold uppercase text-slate-700">Practitioner Question:</h4>
+                            <p class="text-xs text-slate-600">What is the suspected condition, and what immediate step-by-step actions must you take as a Level 3 practitioner?</p>
+
+                            <button onclick="toggleCaseAnswer('case1')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs font-bold transition-colors">
+                                Show / Hide Model Answer
+                            </button>
+
+                            <div id="case1" class="hidden text-xs text-slate-700 bg-indigo-50/50 p-4 rounded border border-indigo-100 space-y-2">
+                                <p><strong>Suspected Condition:</strong> Suspected Meningococcal Meningitis / Meningococcal Septicemia (indicated by fever, photophobia, neck stiffness, non-blanching rash).</p>
+                                <p><strong>Immediate Practitioner Actions:</strong></p>
+                                <ol class="list-decimal pl-5 space-y-1">
+                                    <li><strong>Call Emergency Services (999):</strong> Request immediate emergency medical assistance, informing dispatchers of non-blanching rash and suspected meningitis.</li>
+                                    <li><strong>Contact Parents/Carers:</strong> Inform parents immediately without delaying emergency services.</li>
+                                    <li><strong>Isolation & Comfort:</strong> Keep child calm, comfortable, and in a quiet, dimmed room to alleviate photophobia.</li>
+                                    <li><strong>Infection Control & Escalation:</strong> Inform nursery management. UK Health Security Agency (UKHSA) will be notified for contact tracing and prophylactic antibiotics for close contacts.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Study 2 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-900 text-base">Case 2: Addressing Vaccine Hesitancy</h3>
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">Health Promotion</span>
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed">
+                            A parent of a 12-month-old child approaches you during drop-off. They express anxiety regarding the upcoming MMR (Measles, Mumps, Rubella) vaccine, citing conflicting information they read on social media regarding side effects.
+                        </p>
+
+                        <div class="bg-white p-4 rounded-lg border border-slate-200 space-y-3">
+                            <h4 class="text-xs font-bold uppercase text-slate-700">Practitioner Question:</h4>
+                            <p class="text-xs text-slate-600">How should you communicate professionally with the parent while maintaining evidence-based practice and professional boundaries?</p>
+
+                            <button onclick="toggleCaseAnswer('case2')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs font-bold transition-colors">
+                                Show / Hide Model Answer
+                            </button>
+
+                            <div id="case2" class="hidden text-xs text-slate-700 bg-emerald-50/50 p-4 rounded border border-emerald-100 space-y-2">
+                                <p><strong>Professional Communication Strategy:</strong></p>
+                                <ul class="list-disc pl-5 space-y-1">
+                                    <li><strong>Active Listening & Empathy:</strong> Acknowledge parental concerns without judgment or dismissal. Validate their desire to protect their child.</li>
+                                    <li><strong>Evidence-Based Explanation:</strong> Explain clearly that clinical trials and global health monitoring confirm the MMR vaccine is safe, effective, and rigorously tested. Clarify the risk of severe complications from measles (pneumonia, encephalitis).</li>
+                                    <li><strong>Explain Herd Immunity:</strong> Highlight how MMR vaccination protects both their child and vulnerable infants in the setting.</li>
+                                    <li><strong>Signposting:</strong> Provide reliable, verified NHS resources (e.g., NHS Vaccination Schedule guides) and encourage them to speak with their Health Visitor or GP.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: EXAM PRACTICE QUIZ -->
+        <section id="tab-quiz" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4 mb-6">
+                    <div>
+                        <span class="text-xs font-bold text-nhs-blue bg-blue-50 px-2.5 py-1 rounded-full uppercase">Assessment Prep</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Level 3 Exam-Style Quiz</h2>
+                        <p class="text-sm text-slate-600">Test your mastery of Units C1.1, C2.1, and C2.4 with scenario-based questions.</p>
+                    </div>
+                    <div id="quiz-score-badge" class="px-4 py-2 bg-slate-100 rounded-lg text-xs font-bold text-slate-700">
+                        Score: 0 / 4
+                    </div>
+                </div>
+
+                <div class="space-y-6" id="quiz-container">
+                    <!-- Question 1 -->
+                    <div class="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-slate-500">Question 1 (C1.1)</span>
+                            <span class="text-xs font-bold text-nhs-blue">Meningitis Red Flags</span>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-800">
+                            Which set of symptoms represents specific 'red flag' indicators for bacterial meningitis in young children?
+                        </p>
+                        <div class="space-y-2 text-xs">
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q1" value="A" class="mr-3">
+                                Mild fever, watery discharge from both eyes, slight cough
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q1" value="B" class="mr-3">
+                                High fever, stiff neck, photophobia, cold hands/feet, and non-blanching rash
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q1" value="C" class="mr-3">
+                                White spots on enamel and pain when drinking fruit juice
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-slate-500">Question 2 (C2.1)</span>
+                            <span class="text-xs font-bold text-emerald-700">Herd Immunity</span>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-800">
+                            What is the primary epidemiological mechanism of herd immunity?
+                        </p>
+                        <div class="space-y-2 text-xs">
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q2" value="A" class="mr-3">
+                                High population coverage halts pathogen transmission, protecting vulnerable unimmunized individuals
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q2" value="B" class="mr-3">
+                                Vaccines eliminate the need for hand hygiene and cleaning routines in early years settings
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q2" value="C" class="mr-3">
+                                Antibiotics cure viral infections before symptoms appear in children
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-slate-500">Question 3 (C2.4)</span>
+                            <span class="text-xs font-bold text-purple-700">Dental Caries</span>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-800">
+                            Which factor directly accelerates enamel demineralization leading to dental caries?
+                        </p>
+                        <div class="space-y-2 text-xs">
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q3" value="A" class="mr-3">
+                                Frequent intake of free sugars metabolized by plaque bacteria into tooth-attacking acid
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q3" value="B" class="mr-3">
+                                Application of professional fluoride varnish every 6 months
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q3" value="C" class="mr-3">
+                                Supervised twice-daily toothbrushing with fluoridated toothpaste
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-slate-500">Question 4 (C1.1)</span>
+                            <span class="text-xs font-bold text-amber-700">Speech Development</span>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-800">
+                            A 24-month-old child uses under 10 words and shows no word combinations. What is the most appropriate practitioner initial response?
+                        </p>
+                        <div class="space-y-2 text-xs">
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q4" value="A" class="mr-3">
+                                Ignore the observation, as speech development varies greatly and always self-corrects by age 5
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q4" value="B" class="mr-3">
+                                Conduct milestone screening, consult SENCo/parents, and consider hearing check or SLT referral
+                            </label>
+                            <label class="flex items-center p-3 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 cursor-pointer">
+                                <input type="radio" name="q4" value="C" class="mr-3">
+                                Immediately diagnose the child with permanent hearing loss
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Buttons -->
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="submitQuiz()" class="px-6 py-3 bg-nhs-blue hover:bg-nhs-darkblue text-white font-bold rounded-lg text-sm transition-colors shadow">
+                            Submit Quiz Answers
+                        </button>
+                    </div>
+
+                    <!-- Quiz Feedback Container -->
+                    <div id="quiz-results" class="hidden p-5 rounded-xl border text-sm font-medium space-y-2"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+            <p class="font-semibold text-slate-300">Level 3 AAQ Health & Social Care Interactive Learning Resource</p>
+            <p>Aligned with NHS Early Years Health Promotion Guidance & UK Health Security Agency (UKHSA) Standards.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // State Management
+        let currentProgress = 0;
+        const completedSections = new Set();
+
+        // Condition Database for C1.1
+        const conditionsData = {
+            flu: {
+                title: "Influenza (Flu)",
+                badge: "Viral Respiratory Infection",
+                badgeColor: "bg-blue-100 text-blue-800",
+                icon: "fa-virus",
+                etiology: "Contagious respiratory illness caused by influenza viruses transmitted via respiratory droplets.",
+                symptoms: ["Sudden high fever (38°C+)", "Dry cough & sore throat", "Extreme fatigue & body aches", "Loss of appetite"],
+                practitionerActions: "Isolate child from vulnerable peers, maintain hydration, monitor temperature closely, and advise parents to seek medical guidance if respiratory distress occurs."
+            },
+            chickenpox: {
+                title: "Chicken Pox",
+                badge: "Varicella-Zoster Virus",
+                badgeColor: "bg-amber-100 text-amber-800",
+                icon: "fa-dots-throat",
+                etiology: "Highly contagious viral infection spread by direct contact or airborne droplets.",
+                symptoms: ["Itchy red spots progressing to fluid-filled blisters", "Blisters crust over into scabs", "Mild fever and irritability"],
+                practitionerActions: "Exclude child from setting until ALL blisters have crusted over (typically 5 days). Discourage scratching to prevent secondary bacterial skin infections."
+            },
+            earinfection: {
+                title: "Ear Infection (Otitis Media)",
+                badge: "Bacterial / Viral",
+                badgeColor: "bg-purple-100 text-purple-800",
+                icon: "fa-ear-deaf",
+                etiology: "Inflammation of the middle ear, often following a upper respiratory viral infection (cold).",
+                symptoms: ["Earache & pulling/tugging at ear", "Fever and fluid draining from ear", "Irritability and temporary hearing loss"],
+                practitionerActions: "Reassure child, monitor pain and fever, advise parental consultation with GP for potential antibiotic evaluation if symptoms persist past 3 days."
+            },
+            meningitis: {
+                title: "Meningitis",
+                badge: "MEDICAL EMERGENCY",
+                badgeColor: "bg-red-100 text-red-800 font-extrabold pulse-red",
+                icon: "fa-triangle-exclamation text-red-600",
+                etiology: "Serious inflammation of brain and spinal cord membranes caused by bacterial or viral infection.",
+                symptoms: ["High fever with cold hands/feet", "Stiff neck and extreme photophobia", "Confusion / lethargy", "Non-blanching purpuric rash"],
+                practitionerActions: "IMMEDIATE EMERGENCY ACTION: Call 999. Inform emergency services of non-blanching rash and suspected meningitis. Do not delay hospital transfer."
+            },
+            conjunctivitis: {
+                title: "Conjunctivitis ('Sticky Eye')",
+                badge: "Bacterial / Viral / Allergic",
+                badgeColor: "bg-teal-100 text-teal-800",
+                icon: "fa-eye",
+                etiology: "Inflammation of the conjunctiva covering the eye due to infection or allergen.",
+                symptoms: ["Redness in sclera / eyelid", "Sticky yellow/green discharge", "Grittiness and crusting around eyelashes"],
+                practitionerActions: "Strict hand hygiene, wipe eye from inner to outer corner with clean warm water cotton pad for each wipe, advise GP check for antibiotic drops if bacterial."
+            },
+            speech: {
+                title: "Speech Development & Delays",
+                badge: "Developmental Milestone",
+                badgeColor: "bg-indigo-100 text-indigo-800",
+                icon: "fa-comments",
+                etiology: "Delay in speech sound production or language comprehension; may relate to hearing impairment (glue ear), lack of stimulation, or neurodevelopmental factors.",
+                symptoms: ["Fewer than 10 words at 18-24 months", "Difficulty imitating speech sounds", "Lack of two-word phrase combinations by age 2"],
+                practitionerActions: "Conduct milestone assessment, check hearing history, implement rich language-learning activities, and refer to Speech and Language Therapy (SLT) via SENCo."
+            },
+            dentalcaries: {
+                title: "Dental Caries (Tooth Decay)",
+                badge: "Preventable Disease",
+                badgeColor: "bg-fuchsia-100 text-fuchsia-800",
+                icon: "fa-tooth",
+                etiology: "Demineralization of tooth enamel caused by acid produced when oral plaque bacteria feed on free sugars.",
+                symptoms: ["White/brown spots on tooth enamel", "Visible cavity holes", "Toothache and sensitivity during eating"],
+                practitionerActions: "Promote low-sugar diet policies in settings, encourage routine dentist visits from age 1, advocate supervised toothbrushing schemes with fluoride toothpaste."
+            }
+        };
+
+        // Scenarios Data
+        const scenarioList = [
+            {
+                text: "A 3-year-old child in nursery has a fever of 38.5°C, is pulling constantly at her right ear, crying during mealtime, and seems unable to hear quiet instructions from key workers.",
+                correct: "earinfection",
+                explanation: "Correct! These are classic signs of Otitis Media (middle ear infection), often causing pain on chewing and mild temporary conductive hearing loss."
+            },
+            {
+                text: "A 15-month-old infant is extremely lethargic, has cold hands despite a high body fever, cries when bright lights are turned on, and has small purple spots that do not fade under a glass tumbler.",
+                correct: "meningitis",
+                explanation: "Correct! High fever, photophobia, cold extremities, and a non-blanching rash are critical RED FLAG indicators for Meningococcal Meningitis requiring immediate 999 response."
+            },
+            {
+                text: "A 4-year-old child presents with dark spots on his molars and complains of sharp pain when eating sweet fruit snacks or drinking cold water.",
+                correct: "dentalcaries",
+                explanation: "Correct! Pain from sweet or cold substances coupled with visible dark enamel discoloration indicates dental caries penetrating into sensitive dentin."
+            }
+        ];
+        let currentScenarioIdx = 0;
+
+        // Initialize Page
+        window.onload = function() {
+            showCondition('flu');
+            loadScenario(0);
+            initSimGrid(85);
+            updateProgress(10);
+        };
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('block'));
+            
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+
+            // Update tab button styles
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-nhs-blue', 'bg-blue-50', 'border-b-2', 'border-nhs-blue');
+                btn.classList.add('text-slate-600');
+            });
+
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('text-nhs-blue', 'bg-blue-50', 'border-b-2', 'border-nhs-blue');
+                activeBtn.classList.remove('text-slate-600');
+            }
+
+            // Track progress for tab views
+            completedSections.add(tabId);
+            calculateOverallProgress();
+        }
+
+        // Render Condition Details (C1.1)
+        function showCondition(key) {
+            const data = conditionsData[key];
+            if (!data) return;
+
+            // Highlight button
+            document.querySelectorAll('.cond-selector-btn').forEach(btn => {
+                btn.classList.remove('bg-nhs-blue', 'text-white', 'border-nhs-blue', 'shadow-sm');
+                btn.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-700');
+            });
+            const activeBtn = document.getElementById('cond-btn-' + key);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-nhs-blue', 'text-white', 'border-nhs-blue', 'shadow-sm');
+                activeBtn.classList.remove('bg-slate-50', 'border-slate-200', 'text-slate-700');
+            }
+
+            const html = `
+                <div class="space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-nhs-blue/10 text-nhs-blue flex items-center justify-center text-xl">
+                                <i class="fa-solid ${data.icon}"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900">${data.title}</h3>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${data.badgeColor}">${data.badge}</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white p-4 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-xs uppercase text-slate-500 mb-2"><i class="fa-solid fa-microscope text-nhs-blue mr-1"></i> Cause / Etiology</h4>
+                            <p class="text-xs text-slate-700 leading-relaxed">${data.etiology}</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-xs uppercase text-slate-500 mb-2"><i class="fa-solid fa-clipboard-list text-amber-600 mr-1"></i> Key Clinical Symptoms</h4>
+                            <ul class="list-disc pl-4 text-xs text-slate-700 space-y-1">
+                                ${data.symptoms.map(s => `<li>${s}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border border-slate-200">
+                            <h4 class="font-bold text-xs uppercase text-slate-500 mb-2"><i class="fa-solid fa-user-nurse text-emerald-600 mr-1"></i> L3 Practitioner Actions</h4>
+                            <p class="text-xs text-slate-700 leading-relaxed">${data.practitionerActions}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('condition-card-display').innerHTML = html;
+        }
+
+        // Scenario Exercise Logic
+        function loadScenario(idx) {
+            currentScenarioIdx = idx;
+            const sc = scenarioList[idx];
+            document.getElementById('scenario-number-badge').innerText = `Scenario ${idx + 1} of ${scenarioList.length}`;
+            document.getElementById('scenario-box').innerText = `"${sc.text}"`;
+            document.getElementById('scenario-select').value = "";
+            document.getElementById('scenario-feedback').classList.add('hidden');
+        }
+
+        function verifyScenario() {
+            const selected = document.getElementById('scenario-select').value;
+            const fb = document.getElementById('scenario-feedback');
+            const sc = scenarioList[currentScenarioIdx];
+
+            if (!selected) {
+                fb.className = "p-3 rounded-lg text-xs font-bold bg-amber-100 text-amber-900 block";
+                fb.innerText = "Please select a condition from the drop-down menu.";
+                return;
+            }
+
+            if (selected === sc.correct) {
+                fb.className = "p-4 rounded-lg text-xs font-medium bg-emerald-100 text-emerald-900 block border border-emerald-300";
+                fb.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-700 mr-1 text-base"></i> <strong>Correct Assessment!</strong> ${sc.explanation}`;
+                
+                setTimeout(() => {
+                    if (currentScenarioIdx < scenarioList.length - 1) {
+                        loadScenario(currentScenarioIdx + 1);
+                    }
+                }, 3000);
+            } else {
+                fb.className = "p-4 rounded-lg text-xs font-medium bg-red-100 text-red-900 block border border-red-300";
+                fb.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-700 mr-1 text-base"></i> <strong>Incorrect.</strong> Review the symptoms closely and try again.`;
+            }
+        }
+
+        // Herd Immunity Visualizer Logic
+        let simData = []; // Array of 100 individuals
+
+        function initSimGrid(vaxRate) {
+            const gridContainer = document.getElementById('sim-grid');
+            gridContainer.innerHTML = '';
+            simData = [];
+
+            // 100 people: vaxRate% vaccinated, remainder unvaccinated, 3 vulnerable (immunocompromised)
+            for (let i = 0; i < 100; i++) {
+                let status = 'unvax';
+                if (i < 3) {
+                    status = 'vulnerable'; // Vulnerable patients who cannot be vaccinated
+                } else if (i < 3 + Math.floor((vaxRate / 100) * 97)) {
+                    status = 'vax';
+                }
+
+                simData.push({ id: i, status: status, infected: false });
+            }
+
+            // Shuffle array to distribute people evenly
+            simData.sort(() => Math.random() - 0.5);
+
+            // Render grid
+            simData.forEach(person => {
+                const dot = document.createElement('div');
+                dot.id = `person-${person.id}`;
+                dot.className = getPersonClass(person);
+                dot.title = `Individual status: ${person.status}`;
+                gridContainer.appendChild(dot);
+            });
+        }
+
+        function getPersonClass(person) {
+            if (person.infected) {
+                return 'w-4 h-4 rounded-full bg-red-500 animate-pulse transition-all transform scale-125';
+            }
+            if (person.status === 'vax') {
+                return 'w-4 h-4 rounded-full bg-emerald-500 transition-all';
+            }
+            if (person.status === 'vulnerable') {
+                return 'w-4 h-4 rounded-full bg-purple-500 transition-all';
+            }
+            return 'w-4 h-4 rounded-full bg-slate-500 transition-all';
+        }
+
+        function updateSimRate(val) {
+            document.getElementById('sim-rate-val').innerText = `${val}%`;
+            initSimGrid(parseInt(val));
+            document.getElementById('sim-summary').innerHTML = `Vaccination coverage set to <strong>${val}%</strong>. Click <strong>Trigger Outbreak</strong> to simulate disease transmission.`;
+        }
+
+        function runOutbreakSim() {
+            const vaxRate = parseInt(document.getElementById('sim-slider').value);
+            
+            // Introduce infected patient zero among unvaccinated
+            let infectedCount = 0;
+            let vulnerableInfected = 0;
+
+            // Pick 1 patient zero
+            let targetIdx = simData.findIndex(p => p.status === 'unvax' || p.status === 'vulnerable');
+            if (targetIdx === -1) targetIdx = 0;
+
+            simData[targetIdx].infected = true;
+            infectedCount++;
+
+            // Transmission mechanics
+            // If vax rate >= 90%, herd immunity blocks spread.
+            // If vax rate < 90%, virus spreads proportionally to unvaccinated nodes.
+            simData.forEach(p => {
+                if (p.status !== 'vax') {
+                    // Transmission probability inversely related to herd coverage
+                    const infectProb = Math.max(0, (95 - vaxRate) / 100);
+                    if (Math.random() < infectProb) {
+                        p.infected = true;
+                        infectedCount++;
+                        if (p.status === 'vulnerable') vulnerableInfected++;
+                    }
+                }
+            });
+
+            // Re-render UI grid
+            simData.forEach(person => {
+                const el = document.getElementById(`person-${person.id}`);
+                if (el) el.className = getPersonClass(person);
+            });
+
+            // Display outcome message
+            const summaryEl = document.getElementById('sim-summary');
+            if (vaxRate >= 90) {
+                summaryEl.innerHTML = `
+                    <div class="text-emerald-400 font-bold mb-1"><i class="fa-solid fa-shield-check mr-1"></i> HERD IMMUNITY PROTECTED THE COMMUNITY!</div>
+                    <div>At ${vaxRate}% coverage, the pathogen was contained. Only ${infectedCount} individual(s) became infected. Vulnerable individuals were shielded.</div>
+                `;
+            } else {
+                summaryEl.innerHTML = `
+                    <div class="text-red-400 font-bold mb-1"><i class="fa-solid fa-virus-covid mr-1"></i> OUTBREAK SPREAD! HERD IMMUNITY BROKEN!</div>
+                    <div>At only ${vaxRate}% coverage, ${infectedCount} out of 100 individuals were infected, including ${vulnerableInfected} highly vulnerable individual(s).</div>
+                `;
+            }
+        }
+
+        // Dental Policy Checklist Logic
+        function checkDentalPlan() {
+            const checks = document.querySelectorAll('.dental-check:checked');
+            const fb = document.getElementById('dental-plan-feedback');
+            if (checks.length === 4) {
+                fb.classList.remove('hidden');
+            } else {
+                fb.classList.add('hidden');
+            }
+        }
+
+        // Case Study Toggle Logic
+        function toggleCaseAnswer(caseId) {
+            const el = document.getElementById(caseId);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // Assessment Quiz Logic
+        function submitQuiz() {
+            const answers = {
+                q1: 'B',
+                q2: 'A',
+                q3: 'A',
+                q4: 'B'
+            };
+
+            let score = 0;
+            const total = 4;
+
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) {
+                    score++;
+                }
+            }
+
+            const badge = document.getElementById('quiz-score-badge');
+            badge.innerText = `Score: ${score} / ${total}`;
+            badge.className = score === total ? "px-4 py-2 bg-emerald-100 rounded-lg text-xs font-bold text-emerald-800" : "px-4 py-2 bg-amber-100 rounded-lg text-xs font-bold text-amber-800";
+
+            const resultsEl = document.getElementById('quiz-results');
+            resultsEl.classList.remove('hidden');
+
+            if (score === total) {
+                resultsEl.className = "p-5 rounded-xl border bg-emerald-50 border-emerald-300 text-emerald-900 block space-y-2";
+                resultsEl.innerHTML = `
+                    <h4 class="font-bold text-base flex items-center"><i class="fa-solid fa-award text-emerald-600 mr-2 text-xl"></i> Distinction Grade Outcome!</h4>
+                    <p class="text-xs">You demonstrated thorough knowledge of Units C1.1, C2.1, and C2.4 Level 3 specifications.</p>
+                `;
+            } else {
+                resultsEl.className = "p-5 rounded-xl border bg-amber-50 border-amber-300 text-amber-900 block space-y-2";
+                resultsEl.innerHTML = `
+                    <h4 class="font-bold text-base flex items-center"><i class="fa-solid fa-book-bookmark text-amber-600 mr-2 text-xl"></i> Review Suggested</h4>
+                    <p class="text-xs">You scored ${score}/${total}. Review the module notes for Prevalent Conditions and Herd Immunity thresholds to improve your score.</p>
+                `;
+            }
+
+            completedSections.add('quiz');
+            calculateOverallProgress();
+        }
+
+        // Overall Progress Tracker
+        function calculateOverallProgress() {
+            const totalSections = 5; // Overview, Conditions, Vaccines, Dental, Quiz
+            const pct = Math.min(100, Math.round((completedSections.size / totalSections) * 100));
+            updateProgress(pct);
+        }
+
+        function updateProgress(val) {
+            currentProgress = val;
+            document.getElementById('progress-bar').style.width = `${val}%`;
+            document.getElementById('progress-text').innerText = `${val}%`;
+        }
+    </script>
+</body>
+</html>
